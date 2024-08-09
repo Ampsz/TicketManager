@@ -1,6 +1,66 @@
+# TicketManager Configuration
+# -----------------------------------
+# This configuration file contains all the settings for the TicketManager plugin.
+# Adjust these settings to fit your server's needs.
+
+# Database Configuration
+# -----------------------------------
+# Configure your database connection below. Ensure that the credentials
+# and connection details are correct to avoid connection issues.
+
 database:
-  host: localhost
-  port: 3306
-  name: your_database_name
-  user: your_database_user
-  password: your_database_password
+  host: "localhost"                   # The database host (e.g., localhost, IP address)
+  port: 3306                          # The port number to connect to (default: 3306)
+  name: "ticket_manager_db"           # The name of the database to connect to
+  user: "your_db_user"                # The username to authenticate with
+  password: "your_db_password"        # The password to authenticate with
+
+# Plugin Settings
+# -----------------------------------
+# Adjust the plugin settings below to customize how TicketManager functions.
+
+settings:
+  use_database: true                  # Set to true to use MySQL database, false to use local file storage
+  auto_close_tickets: false           # Automatically close tickets after a certain period of inactivity
+  auto_close_days: 7                  # Number of days before a ticket is automatically closed
+  max_tickets_per_player: 5           # Maximum number of open tickets allowed per player
+  notify_on_ticket_create: true       # Notify admins when a new ticket is created
+
+# Notification Messages
+# -----------------------------------
+# Customize the messages sent to players and admins.
+
+notifications:
+  ticket_created: "&aA new ticket has been created by {creator}!"
+  ticket_assigned: "&eTicket with ID {id} has been assigned to you."
+  ticket_closed_creator: "&aYour ticket with ID {id} has been resolved!"
+  ticket_closed_assignee: "&aTicket with ID {id} assigned to you has been closed."
+  ticket_not_found: "&cTicket with ID {id} could not be found."
+  no_permission: "&cYou do not have permission to use this command."
+  invalid_ticket_id: "&cInvalid ticket ID. Please enter a valid number."
+  only_players: "&cThis command can only be used by players."
+  reload_success: "&aTicketManager configuration reloaded successfully!"
+
+# Logging
+# -----------------------------------
+# Configure logging settings for the TicketManager plugin.
+
+logging:
+  log_to_console: true                # Log all ticket actions to the console
+  log_to_file: true                   # Log all ticket actions to a file
+  log_file: "logs/ticketmanager.log"  # Path to the log file (relative to the plugin directory)
+  log_level: "INFO"                   # Logging level (e.g., INFO, DEBUG, WARN, ERROR)
+
+# Advanced Settings
+# -----------------------------------
+# These settings should generally be left at their defaults unless you have specific needs.
+
+advanced:
+  database_pool_size: 10              # Size of the database connection pool
+  query_timeout: 30                   # Timeout for database queries (in seconds)
+  max_retry_attempts: 3               # Maximum number of retry attempts for failed database operations
+  retry_delay: 5                      # Delay between retry attempts (in seconds)
+
+# -----------------------------------
+# End of configuration file.
+# -----------------------------------

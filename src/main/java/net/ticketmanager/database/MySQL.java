@@ -8,19 +8,13 @@ public class MySQL {
 
     private Connection connection;
 
-    public void connect(String host, int port, String database, String username, String password) throws SQLException {
-        if (connection != null && !connection.isClosed()) {
-            return;
-        }
+    public MySQL() {
+        // No arguments needed in the constructor
+    }
 
-        synchronized (this) {
-            if (connection != null && !connection.isClosed()) {
-                return;
-            }
-            connection = DriverManager.getConnection(
-                    "jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false&autoReconnect=true", username, password
-            );
-        }
+    public void connect(String host, int port, String database, String username, String password) throws SQLException {
+        String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?useSSL=false";
+        connection = DriverManager.getConnection(url, username, password);
     }
 
     public Connection getConnection() throws SQLException {

@@ -15,7 +15,7 @@ public class TicketCommand implements CommandExecutor {
 
     public TicketCommand(TicketManagerPlugin plugin) {
         this.plugin = plugin;
-        this.ticketManager = plugin.getTicketManager();  // Reference the TicketManager from the plugin
+        this.ticketManager = plugin.getTicketManager();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class TicketCommand implements CommandExecutor {
                     messageBuilder.append(args[i]).append(" ");
                 }
                 String message = messageBuilder.toString().trim();
-                ticketManager.createTicket(player.getName(), message, player.getLocation()); // Added location parameter
+                ticketManager.createTicket(player.getName(), message, player.getLocation());
                 player.sendMessage(plugin.getMessage("ticket_created"));
                 break;
 
@@ -94,7 +94,7 @@ public class TicketCommand implements CommandExecutor {
                     int id = Integer.parseInt(args[1]);
                     boolean success = ticketManager.closeTicket(id);
                     if (success) {
-                        player.sendMessage(plugin.getMessage("ticket_closed"));
+                        player.sendMessage(plugin.getMessage("ticket_closed").replace("{id}", String.valueOf(id)));
                     } else {
                         player.sendMessage(plugin.getMessage("ticket_not_found").replace("{id}", String.valueOf(id)));
                     }
@@ -111,11 +111,12 @@ public class TicketCommand implements CommandExecutor {
     }
 
     private void showHelp(CommandSender sender) {
-        sender.sendMessage(plugin.getMessage("help_header"));
-        sender.sendMessage(plugin.getMessage("help_create"));
-        sender.sendMessage(plugin.getMessage("help_list"));
-        sender.sendMessage(plugin.getMessage("help_assign"));
-        sender.sendMessage(plugin.getMessage("help_close"));
-        sender.sendMessage(plugin.getMessage("help_reload"));
+        // Hardcoded help messages
+        sender.sendMessage(ChatColor.GOLD + "TicketManager Help");
+        sender.sendMessage(ChatColor.YELLOW + "/ticket create <message>" + ChatColor.WHITE + " - Creates a new ticket.");
+        sender.sendMessage(ChatColor.YELLOW + "/ticket list" + ChatColor.WHITE + " - Lists all open tickets.");
+        sender.sendMessage(ChatColor.YELLOW + "/ticket assign <id> <player>" + ChatColor.WHITE + " - Assigns a ticket to a player.");
+        sender.sendMessage(ChatColor.YELLOW + "/ticket close <id>" + ChatColor.WHITE + " - Closes a ticket.");
+        sender.sendMessage(ChatColor.YELLOW + "/ticket reload" + ChatColor.WHITE + " - Reloads the configuration and tickets.");
     }
 }

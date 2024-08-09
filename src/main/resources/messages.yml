@@ -18,16 +18,6 @@ ticket_layout:
   location: "&bLocation: &f{location}"
   footer: "&b============= Actions ============="
 
-# Commands
-commands:
-  help:
-    help_header: "&6TicketManager Help"
-    help_create: "&e/ticket create <message>&f - Creates a new ticket."
-    help_list: "&e/ticket list&f - Lists all open tickets."
-    help_assign: "&e/ticket assign <id> <player>&f - Assigns a ticket to a player."
-    help_close: "&e/ticket close <id>&f - Closes a ticket."
-    help_reload: "&e/ticket reload&f - Reloads the configuration and tickets."
-
   reload_success: "&aTicketManager configuration reloaded successfully!"
   no_permission: "&cYou do not have permission to use this command."
   only_players: "&cThis command can only be used by players."
