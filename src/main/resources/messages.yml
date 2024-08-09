@@ -1,41 +1,52 @@
-# TicketManager Messages Configuration
-# -----------------------------------
-# This file contains all the messages used by the TicketManager plugin.
+# TicketManager Plugin - Messages Configuration
+# ---------------------------------------------
+# This file contains all the customizable messages used by the TicketManager plugin.
+# You can change the text and color codes to suit your server's theme.
 # Use the placeholders to dynamically insert ticket data into messages.
 # Color codes can be used with '&' followed by a letter or number (e.g., &a for green).
 
 # General Messages
-no_tickets: "&eNo tickets available."
-list_tickets_header: "&aListing all tickets:"
+messages:
+  no_tickets: "&eThere are currently no open tickets."
+  list_tickets_header: "&a-- Open Tickets --"
+  ticket_created: "&aYour ticket has been created successfully!"
+  ticket_assigned: "&aTicket has been successfully assigned!"
+  ticket_closed: "&aTicket with ID {id} has been successfully closed."
+  ticket_closed_creator: "&aYour ticket with ID {id} has been resolved."
+  ticket_not_found: "&cTicket with ID {id} could not be found."
+  invalid_ticket_id: "&cThe ticket ID you provided is invalid."
+  no_permission: "&cYou do not have permission to execute this command."
+  only_players: "&cThis command can only be used by players."
+  reload_success: "&aTicketManager configuration reloaded successfully."
+  pruned_tickets: "&aSuccessfully pruned {count} tickets."
+  invalid_days: "&cThe number of days provided is invalid. Please enter a valid number."
 
-# Ticket Layout
+# Command Usage Instructions
+usage:
+  use_ticket_help: "&eUse /ticket help to see the list of available commands."
+  use_ticket_create: "&eUsage: /ticket create <message> - Creates a new ticket."
+  use_ticket_assign: "&eUsage: /ticket assign <id> <player> - Assigns a ticket to a player."
+  use_ticket_close: "&eUsage: /ticket close <id> - Closes an open ticket."
+  use_ticket_prune: "&eUsage: /ticket prune <days> - Prunes tickets older than the specified number of days."
+  unknown_subcommand: "&cUnknown subcommand. Use /ticket help for a list of commands."
+
+# Help Command Output
+help:
+  header: "&6-- TicketManager Help --"
+  commands:
+    - "&e/ticket create <message> &7- Creates a new ticket."
+    - "&e/ticket list &7- Lists all open tickets."
+    - "&e/ticket assign <id> <player> &7- Assigns a ticket to a player."
+    - "&e/ticket close <id> &7- Closes a ticket."
+    - "&e/ticket reload &7- Reloads the plugin configuration."
+    - "&e/ticket prune <days> &7- Prunes tickets older than the specified number of days."
+
+# Ticket Layout in /ticket list
 ticket_layout:
-  header: "&b============== Info =============="
+  header: "&b============== Ticket Info =============="
   creator: "&bTicket ID: {id} | Creator: &f{creator}"
   assigned_to: "&bAssigned To: &f{assignee}"
   priority: "&bPriority: &e{priority}"
-  status: "&bStatus: &a{status} | &bMessage: &f{message}"
+  status: "&bStatus: &a{status} | Message: &f{message}"
   location: "&bLocation: &f{location}"
-  footer: "&b==================================="
-
-  reload_success: "&aTicketManager configuration reloaded successfully!"
-  no_permission: "&cYou do not have permission to use this command."
-  only_players: "&cThis command can only be used by players."
-
-# Ticket Management
-ticket_created: "&aTicket created successfully!"
-ticket_assigned: "&aTicket assigned successfully!"
-ticket_closed: "&aTicket with ID {id} has been closed successfully!"
-ticket_closed_creator: "&aYour ticket with ID {id} has been resolved!"
-ticket_not_found: "&cTicket with ID {id} does not exist."
-invalid_ticket_id: "&cInvalid ticket ID."
-
-
-# Placeholders
-# -----------------------------------
-# {creator}  - Name of the player who created the ticket
-# {assignee} - Name of the player the ticket is assigned to
-# {priority} - Priority of the ticket (e.g., NORMAL)
-# {status}   - Current status of the ticket (e.g., OPEN, CLOSED)
-# {location} - World and coordinates of the ticket's location
-# {id}       - Ticket ID
+  footer: "&b======================================"

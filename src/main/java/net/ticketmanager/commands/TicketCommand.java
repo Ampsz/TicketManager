@@ -33,9 +33,9 @@ public class TicketCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("reload")) {
             if (sender.hasPermission("ticketmanager.reload")) {
                 plugin.reloadPluginConfig();
-                sender.sendMessage(plugin.getMessage("reload_success"));
+                sender.sendMessage(ChatColor.GREEN + "TicketManager configuration reloaded successfully.");
             } else {
-                sender.sendMessage(plugin.getMessage("no_permission"));
+                sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             }
             return true;
         }
@@ -46,7 +46,7 @@ public class TicketCommand implements CommandExecutor {
         }
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(plugin.getMessage("only_players"));
+            sender.sendMessage(ChatColor.RED + "This command can only be used by players.");
             return true;
         }
 
@@ -64,7 +64,7 @@ public class TicketCommand implements CommandExecutor {
                 }
                 String message = messageBuilder.toString().trim();
                 ticketManager.createTicket(player.getName(), message, player.getLocation());
-                player.sendMessage(plugin.getMessage("ticket_created"));
+                player.sendMessage(ChatColor.GREEN + "Your ticket has been created successfully!");
                 break;
 
             case "list":
@@ -81,12 +81,12 @@ public class TicketCommand implements CommandExecutor {
                     String assignee = args[2];
                     boolean success = ticketManager.assignTicket(id, assignee);
                     if (success) {
-                        player.sendMessage(plugin.getMessage("ticket_assigned"));
+                        player.sendMessage(ChatColor.GREEN + "Ticket has been successfully assigned.");
                     } else {
-                        player.sendMessage(plugin.getMessage("ticket_not_found").replace("{id}", String.valueOf(id)));
+                        player.sendMessage(ChatColor.RED + "Ticket with ID " + id + " could not be found.");
                     }
                 } catch (NumberFormatException e) {
-                    player.sendMessage(plugin.getMessage("invalid_ticket_id"));
+                    player.sendMessage(ChatColor.RED + "Invalid ticket ID.");
                 }
                 break;
 
@@ -99,12 +99,12 @@ public class TicketCommand implements CommandExecutor {
                     int id = Integer.parseInt(args[1]);
                     boolean success = ticketManager.closeTicket(id);
                     if (success) {
-                        player.sendMessage(plugin.getMessage("ticket_closed").replace("{id}", String.valueOf(id)));
+                        player.sendMessage(ChatColor.GREEN + "Ticket with ID " + id + " has been successfully closed.");
                     } else {
-                        player.sendMessage(plugin.getMessage("ticket_not_found").replace("{id}", String.valueOf(id)));
+                        player.sendMessage(ChatColor.RED + "Ticket with ID " + id + " could not be found.");
                     }
                 } catch (NumberFormatException e) {
-                    player.sendMessage(plugin.getMessage("invalid_ticket_id"));
+                    player.sendMessage(ChatColor.RED + "Invalid ticket ID.");
                 }
                 break;
 
@@ -117,7 +117,7 @@ public class TicketCommand implements CommandExecutor {
 
     private void handlePruneCommand(CommandSender sender, String[] args) {
         if (!sender.hasPermission("ticketmanager.prune")) {
-            sender.sendMessage(plugin.getMessage("no_permission"));
+            sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
             return;
         }
 
@@ -129,19 +129,19 @@ public class TicketCommand implements CommandExecutor {
         try {
             int days = Integer.parseInt(args[1]);
             int prunedCount = ticketManager.pruneTickets(days);
-            sender.sendMessage(ChatColor.GREEN + "Pruned " + prunedCount + " tickets.");
+            sender.sendMessage(ChatColor.GREEN + "Successfully pruned " + prunedCount + " tickets.");
         } catch (NumberFormatException e) {
             sender.sendMessage(ChatColor.RED + "Invalid number of days.");
         }
     }
 
     private void showHelp(CommandSender sender) {
-        sender.sendMessage(ChatColor.GOLD + "TicketManager Help");
+        sender.sendMessage(ChatColor.GOLD + "-- TicketManager Help --");
         sender.sendMessage(ChatColor.YELLOW + "/ticket create <message>" + ChatColor.WHITE + " - Creates a new ticket.");
         sender.sendMessage(ChatColor.YELLOW + "/ticket list" + ChatColor.WHITE + " - Lists all open tickets.");
         sender.sendMessage(ChatColor.YELLOW + "/ticket assign <id> <player>" + ChatColor.WHITE + " - Assigns a ticket to a player.");
         sender.sendMessage(ChatColor.YELLOW + "/ticket close <id>" + ChatColor.WHITE + " - Closes a ticket.");
-        sender.sendMessage(ChatColor.YELLOW + "/ticket reload" + ChatColor.WHITE + " - Reloads the configuration and tickets.");
+        sender.sendMessage(ChatColor.YELLOW + "/ticket reload" + ChatColor.WHITE + " - Reloads the plugin configuration.");
         sender.sendMessage(ChatColor.YELLOW + "/ticket prune <days>" + ChatColor.WHITE + " - Prunes tickets older than the specified number of days.");
     }
 }

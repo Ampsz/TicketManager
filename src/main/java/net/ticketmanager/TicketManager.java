@@ -143,6 +143,7 @@ public class TicketManager {
         }
     }
 
+
     public boolean assignTicket(int id, String assignee) {
         Ticket ticket = getTicketById(id);
         if (ticket != null && !ticket.getStatus().equalsIgnoreCase("Closed")) {
