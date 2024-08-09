@@ -41,6 +41,11 @@ public class TicketCommand implements CommandExecutor {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("prune")) {
+            handlePruneCommand(sender, args);
+            return true;
+        }
+
         if (!(sender instanceof Player)) {
             sender.sendMessage(plugin.getMessage("only_players"));
             return true;
@@ -111,6 +116,26 @@ public class TicketCommand implements CommandExecutor {
         return true;
     }
 
+    private void handlePruneCommand(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("ticketmanager.prune")) {
+            sender.sendMessage(plugin.getMessage("no_permission"));
+            return;
+        }
+
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Usage: /ticket prune <days>");
+            return;
+        }
+
+        try {
+            int days = Integer.parseInt(args[1]);
+            int prunedCount = ticketManager.pruneTickets(days);
+            sender.sendMessage(ChatColor.GREEN + "Pruned " + prunedCount + " tickets older than " + days + " days.");
+        } catch (NumberFormatException e) {
+            sender.sendMessage(ChatColor.RED + "Invalid number of days.");
+        }
+    }
+
     private void showHelp(CommandSender sender) {
         // Hardcoded help messages
         sender.sendMessage(ChatColor.GOLD + "TicketManager Help");
@@ -119,5 +144,6 @@ public class TicketCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.YELLOW + "/ticket assign <id> <player>" + ChatColor.WHITE + " - Assigns a ticket to a player.");
         sender.sendMessage(ChatColor.YELLOW + "/ticket close <id>" + ChatColor.WHITE + " - Closes a ticket.");
         sender.sendMessage(ChatColor.YELLOW + "/ticket reload" + ChatColor.WHITE + " - Reloads the configuration and tickets.");
+        sender.sendMessage(ChatColor.YELLOW + "/ticket prune <days>" + ChatColor.WHITE + " - Prunes tickets older than the specified number of days.");
     }
 }

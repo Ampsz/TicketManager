@@ -1,9 +1,11 @@
 package net.ticketmanager;
 
 import net.md_5.bungee.api.ChatColor;
+import net.ticketmanager.GUI.TicketGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import net.ticketmanager.database.MySQL;
 import net.ticketmanager.commands.TicketCommand;
@@ -13,12 +15,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.FileWriter;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 
 public class TicketManagerPlugin extends JavaPlugin {
 
     private MySQL mySQL;
     private TicketManager ticketManager;
+    private TicketGUI ticketGUI; // Declare the TicketGUI variable
     private File messagesFile;
     private YamlConfiguration messagesConfig;
 
@@ -36,9 +40,24 @@ public class TicketManagerPlugin extends JavaPlugin {
         // Initialize the ticket manager
         ticketManager = new TicketManager(this, mySQL, getConfig().getBoolean("settings.use_database"));
 
+        // Initialize the TicketGUI
+        ticketGUI = new TicketGUI(this); // Initialize TicketGUI
+
         // Register the /ticket command
         this.getCommand("ticket").setExecutor(new TicketCommand(this));
 
+        // Register the /ticketgui command
+        this.getCommand("ticketgui").setExecutor((sender, command, label, args) -> {
+            if (sender instanceof Player && sender.hasPermission("ticketmanager.gui")) {
+                Player player = (Player) sender;
+                List<Ticket> tickets = ticketManager.getTickets(); // Ensure you have a method to get all tickets
+                ticketGUI.openTicketGUI(player, tickets); // Open the ticket GUI
+                return true;
+            } else {
+                sender.sendMessage(ChatColor.RED + "You don't have permission to use this command.");
+                return false;
+            }
+        });
     }
 
     private void loadMessagesConfig() {
@@ -83,7 +102,6 @@ public class TicketManagerPlugin extends JavaPlugin {
             }
         }
     }
-
 
     public TicketManager getTicketManager() {
         return ticketManager;

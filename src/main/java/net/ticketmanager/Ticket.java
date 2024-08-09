@@ -3,11 +3,14 @@ package net.ticketmanager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import java.util.Date;
+
 public class Ticket {
 
     private final int id;
     private final String creator;
     private final String message;
+    private Date submissionDate;
     private String assignee;
     private String status;
     private final String world;
@@ -26,6 +29,7 @@ public class Ticket {
         this.z = location.getZ();
         this.yaw = location.getYaw();
         this.pitch = location.getPitch();
+        this.submissionDate = new Date();
     }
 
     // Getters for the new fields
@@ -84,5 +88,13 @@ public class Ticket {
 
     public Location getLocation() {
         return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+    }
+
+    public Date getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public void setSubmissionDate(Date submissionDate) {
+        this.submissionDate = submissionDate;
     }
 }

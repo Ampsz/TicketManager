@@ -11,6 +11,14 @@ commands:
     aliases: [tickets]
     permission: ticketmanager.use
     permission-message: "&cYou do not have permission to use this command."
+  ticketgui:
+    description: Opens the ticket management GUI.
+    permission: ticketmanager.gui
+    permission-message: "&cYou do not have permission to use this command."
+  ticketprune:
+    description: Prunes old tickets from the database.
+    usage: /ticketprune <days>
+    permission: ticketmanager.prune
 permissions:
   ticketmanager.use:
     description: Allows the player to use the /ticket command.
@@ -32,4 +40,10 @@ permissions:
     default: op
   ticketmanager.notify:
     description: Notifies the player of new tickets and unresolved tickets on join.
+    default: op
+  ticketmanager.gui:
+    description: Allows the player to use the /ticket gui command.
+    default: op
+  ticketmanager.prune:
+    description: Allows the player to prune old tickets.
     default: op

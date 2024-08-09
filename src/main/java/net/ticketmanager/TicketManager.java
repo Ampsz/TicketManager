@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class TicketManager {
@@ -219,6 +220,34 @@ public class TicketManager {
         }
     }
 
+    public int pruneTickets(int days) {
+        int prunedCount = 0;
+        if (mySQL != null) {
+            try (Connection connection = mySQL.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(
+                         "DELETE FROM tickets WHERE submission_date < ?")) {
+
+                // Calculate the threshold date
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.DAY_OF_YEAR, -days);
+                java.sql.Timestamp thresholdDate = new java.sql.Timestamp(calendar.getTimeInMillis());
+
+                // Set the parameter for the query
+                statement.setTimestamp(1, thresholdDate);
+
+                // Execute the query and get the number of rows affected
+                prunedCount = statement.executeUpdate();
+
+                // Log the result
+                plugin.getLogger().info("Pruned " + prunedCount + " tickets older than " + days + " days.");
+
+            } catch (SQLException e) {
+                plugin.getLogger().severe("Failed to prune tickets: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return prunedCount;
+    }
 
 
     private Ticket getTicketById(int id) {
@@ -228,5 +257,9 @@ public class TicketManager {
             }
         }
         return null;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
     }
 }
