@@ -74,11 +74,11 @@ Contributions to TicketManager are welcome! Here’s how you can contribute:
 
 ## Issues and Support
 
-If you encounter any issues with TicketManager or need help, please open an issue on the [GitHub Issues](https://github.com/ticketmanager/ticketmanager/issues) page. We welcome bug reports, feature requests, and general questions.
+If you encounter any issues with TicketManager or need help, please open an issue on the [GitHub Issues](https://github.com/bacondrips/ticketmanager/issues) page. We welcome bug reports, feature requests, and general questions.
 
 ## License
 
-TicketManager is licensed under the MIT License. See the [LICENSE]([https://github.com/your-repo/ticketmanager/blob/main/LICENSE](https://github.com/BaconDrips/TicketManager/tree/main?tab=MIT-1-ov-file#readme)) file for more information.
+TicketManager is licensed under the MIT License. See the [LICENSE]([https://github.com/BaconDrips/TicketManager/tree/main?tab=MIT-1-ov-file#readme]) file for more information.
 
 ## Acknowledgments
 
