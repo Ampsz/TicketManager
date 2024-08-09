@@ -13,6 +13,8 @@ public class TicketCommand implements CommandExecutor {
     private final TicketManagerPlugin plugin;
     private final TicketManager ticketManager;
 
+    private String PrefixMain = org.bukkit.ChatColor.GREEN + "VG" + org.bukkit.ChatColor.DARK_GREEN + org.bukkit.ChatColor.BOLD + " > " + org.bukkit.ChatColor.AQUA;
+
     public TicketCommand(TicketManagerPlugin plugin) {
         this.plugin = plugin;
         this.ticketManager = plugin.getTicketManager();
@@ -21,7 +23,7 @@ public class TicketCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.GREEN + "Use /ticket help to see the available commands.");
+            sender.sendMessage(PrefixMain + ChatColor.GREEN + "Use /ticket help to see the available commands.");
             return true;
         }
 
@@ -33,9 +35,9 @@ public class TicketCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("reload")) {
             if (sender.hasPermission("ticketmanager.reload")) {
                 plugin.reloadPluginConfig();
-                sender.sendMessage(ChatColor.GREEN + "TicketManager configuration reloaded successfully.");
+                sender.sendMessage(PrefixMain + ChatColor.GREEN + "TicketManager configuration reloaded successfully.");
             } else {
-                sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
+                sender.sendMessage(PrefixMain + ChatColor.RED + "You cannot do that!");
             }
             return true;
         }
@@ -55,7 +57,7 @@ public class TicketCommand implements CommandExecutor {
         switch (args[0].toLowerCase()) {
             case "create":
                 if (args.length < 2) {
-                    player.sendMessage(ChatColor.RED + "Usage: /ticket create <message>");
+                    player.sendMessage(PrefixMain + ChatColor.RED + "Usage: /ticket create <message>");
                     return true;
                 }
                 StringBuilder messageBuilder = new StringBuilder();
@@ -64,7 +66,7 @@ public class TicketCommand implements CommandExecutor {
                 }
                 String message = messageBuilder.toString().trim();
                 ticketManager.createTicket(player.getName(), message, player.getLocation());
-                player.sendMessage(ChatColor.GREEN + "Your ticket has been created successfully!");
+                player.sendMessage(PrefixMain + ChatColor.GREEN + "Your ticket has been created successfully!");
                 break;
 
             case "list":
@@ -73,7 +75,7 @@ public class TicketCommand implements CommandExecutor {
 
             case "assign":
                 if (args.length < 3) {
-                    player.sendMessage(ChatColor.RED + "Usage: /ticket assign <id> <player>");
+                    player.sendMessage(PrefixMain + ChatColor.RED + "Usage: /ticket assign <id> <player>");
                     return true;
                 }
                 try {
@@ -81,35 +83,35 @@ public class TicketCommand implements CommandExecutor {
                     String assignee = args[2];
                     boolean success = ticketManager.assignTicket(id, assignee);
                     if (success) {
-                        player.sendMessage(ChatColor.GREEN + "Ticket has been successfully assigned.");
+                        player.sendMessage(PrefixMain + ChatColor.GREEN + "Ticket has been successfully assigned.");
                     } else {
-                        player.sendMessage(ChatColor.RED + "Ticket with ID " + id + " could not be found.");
+                        player.sendMessage(PrefixMain + ChatColor.RED + "Ticket with ID " + id + " could not be found.");
                     }
                 } catch (NumberFormatException e) {
-                    player.sendMessage(ChatColor.RED + "Invalid ticket ID.");
+                    player.sendMessage(PrefixMain + ChatColor.RED + "Invalid ticket ID.");
                 }
                 break;
 
             case "close":
                 if (args.length < 2) {
-                    player.sendMessage(ChatColor.RED + "Usage: /ticket close <id>");
+                    player.sendMessage(PrefixMain + ChatColor.RED + "Usage: /ticket close <id>");
                     return true;
                 }
                 try {
                     int id = Integer.parseInt(args[1]);
                     boolean success = ticketManager.closeTicket(id);
                     if (success) {
-                        player.sendMessage(ChatColor.GREEN + "Ticket with ID " + id + " has been successfully closed.");
+                        player.sendMessage(PrefixMain + ChatColor.GREEN + "Ticket with ID " + id + " has been successfully closed.");
                     } else {
-                        player.sendMessage(ChatColor.RED + "Ticket with ID " + id + " could not be found.");
+                        player.sendMessage(PrefixMain + ChatColor.RED + "Ticket with ID " + id + " could not be found.");
                     }
                 } catch (NumberFormatException e) {
-                    player.sendMessage(ChatColor.RED + "Invalid ticket ID.");
+                    player.sendMessage(PrefixMain + ChatColor.RED + "Invalid ticket ID.");
                 }
                 break;
 
             default:
-                player.sendMessage(ChatColor.RED + "Unknown subcommand. Use /ticket help for a list of commands.");
+                player.sendMessage(PrefixMain + ChatColor.RED + "Unknown subcommand. Use /ticket help for a list of commands.");
         }
 
         return true;
@@ -117,21 +119,21 @@ public class TicketCommand implements CommandExecutor {
 
     private void handlePruneCommand(CommandSender sender, String[] args) {
         if (!sender.hasPermission("ticketmanager.prune")) {
-            sender.sendMessage(ChatColor.RED + "You do not have permission to use this command.");
+            sender.sendMessage(PrefixMain + ChatColor.RED + "You cannot do that!");
             return;
         }
 
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: /ticket prune <days>");
+            sender.sendMessage(PrefixMain + ChatColor.RED + "Usage: /ticket prune <days>");
             return;
         }
 
         try {
             int days = Integer.parseInt(args[1]);
             int prunedCount = ticketManager.pruneTickets(days);
-            sender.sendMessage(ChatColor.GREEN + "Successfully pruned " + prunedCount + " tickets.");
+            sender.sendMessage(PrefixMain + ChatColor.GREEN + "Successfully pruned " + prunedCount + " tickets.");
         } catch (NumberFormatException e) {
-            sender.sendMessage(ChatColor.RED + "Invalid number of days.");
+            sender.sendMessage(PrefixMain + ChatColor.RED + "Invalid number of days.");
         }
     }
 
