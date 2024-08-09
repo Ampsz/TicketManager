@@ -1,0 +1,24 @@
+name: TicketManager
+version: '${project.version}'
+main: net.ticketmanager.TicketManagerPlugin
+author: Amps
+description: Coming Soon
+api-version: '1.21'
+commands:
+  ticket:
+    description: Main ticket command for creating and managing tickets.
+    usage: /ticket <create|list|assign|close> [args]
+    permission: ticket.use
+    permission-message: You do not have permission to use this command.
+  ticketmanager:
+    description: Admin command to reload the TicketManager plugin.
+    usage: /ticketmanager <reload>
+    permission: ticketmanager.admin
+    permission-message: You do not have permission to use this command.
+permissions:
+  ticket.use:
+    description: Allows a player to create and view their own tickets.
+    default: true
+  ticketmanager.admin:
+    description: Allows staff to manage tickets and reload the plugin.
+    default: op
