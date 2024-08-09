@@ -33,7 +33,6 @@ public class TicketCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("reload")) {
             if (sender.hasPermission("ticketmanager.reload")) {
                 plugin.reloadPluginConfig();
-                // Send the reload success message
                 sender.sendMessage(plugin.getMessage("reload_success"));
             } else {
                 sender.sendMessage(plugin.getMessage("no_permission"));
@@ -130,14 +129,13 @@ public class TicketCommand implements CommandExecutor {
         try {
             int days = Integer.parseInt(args[1]);
             int prunedCount = ticketManager.pruneTickets(days);
-            sender.sendMessage(ChatColor.GREEN + "Pruned " + prunedCount + " tickets older than " + days + " days.");
+            sender.sendMessage(ChatColor.GREEN + "Pruned " + prunedCount + " tickets.");
         } catch (NumberFormatException e) {
             sender.sendMessage(ChatColor.RED + "Invalid number of days.");
         }
     }
 
     private void showHelp(CommandSender sender) {
-        // Hardcoded help messages
         sender.sendMessage(ChatColor.GOLD + "TicketManager Help");
         sender.sendMessage(ChatColor.YELLOW + "/ticket create <message>" + ChatColor.WHITE + " - Creates a new ticket.");
         sender.sendMessage(ChatColor.YELLOW + "/ticket list" + ChatColor.WHITE + " - Lists all open tickets.");

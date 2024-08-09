@@ -7,7 +7,7 @@ api-version: '1.21'
 commands:
   ticket:
     description: Main command for ticket management.
-    usage: /ticket <create|list|assign|close|reload|help>
+    usage: /ticket <create|list|assign|close|reload|prune>
     aliases: [tickets]
     permission: ticketmanager.use
     permission-message: "&cYou do not have permission to use this command."
@@ -15,10 +15,6 @@ commands:
     description: Opens the ticket management GUI.
     permission: ticketmanager.gui
     permission-message: "&cYou do not have permission to use this command."
-  ticketprune:
-    description: Prunes old tickets from the database.
-    usage: /ticketprune <days>
-    permission: ticketmanager.prune
 permissions:
   ticketmanager.use:
     description: Allows the player to use the /ticket command.

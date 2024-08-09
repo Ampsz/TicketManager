@@ -14,15 +14,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.FileWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 public class TicketManagerPlugin extends JavaPlugin {
 
     private MySQL mySQL;
     private TicketManager ticketManager;
-    private TicketGUI ticketGUI; // Declare the TicketGUI variable
+    private TicketGUI ticketGUI;
     private File messagesFile;
     private YamlConfiguration messagesConfig;
 
@@ -41,7 +44,7 @@ public class TicketManagerPlugin extends JavaPlugin {
         ticketManager = new TicketManager(this, mySQL, getConfig().getBoolean("settings.use_database"));
 
         // Initialize the TicketGUI
-        ticketGUI = new TicketGUI(this); // Initialize TicketGUI
+        ticketGUI = new TicketGUI(this);
 
         // Register the /ticket command
         this.getCommand("ticket").setExecutor(new TicketCommand(this));
@@ -50,8 +53,8 @@ public class TicketManagerPlugin extends JavaPlugin {
         this.getCommand("ticketgui").setExecutor((sender, command, label, args) -> {
             if (sender instanceof Player && sender.hasPermission("ticketmanager.gui")) {
                 Player player = (Player) sender;
-                List<Ticket> tickets = ticketManager.getTickets(); // Ensure you have a method to get all tickets
-                ticketGUI.openTicketGUI(player, tickets); // Open the ticket GUI
+                List<Ticket> tickets = ticketManager.getTickets();
+                ticketGUI.openTicketGUI(player, tickets);
                 return true;
             } else {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to use this command.");
@@ -63,7 +66,7 @@ public class TicketManagerPlugin extends JavaPlugin {
     private void loadMessagesConfig() {
         messagesFile = new File(getDataFolder(), "messages.yml");
         if (!messagesFile.exists()) {
-            saveResource("messages.yml", false); // Creates messages.yml from the plugin's resources folder
+            saveResource("messages.yml", false);
         }
         messagesConfig = YamlConfiguration.loadConfiguration(messagesFile);
     }
@@ -81,7 +84,6 @@ public class TicketManagerPlugin extends JavaPlugin {
         );
 
         try {
-            // Connect to the database
             mySQL.connect();
             getLogger().info("Successfully connected to the database.");
         } catch (SQLException e) {
@@ -107,6 +109,11 @@ public class TicketManagerPlugin extends JavaPlugin {
         return ticketManager;
     }
 
+    // Add this method to return the TicketGUI instance
+    public TicketGUI getTicketGUI() {
+        return ticketGUI;
+    }
+
     public String getMessage(String key) {
         String message = messagesConfig.getString(key);
         if (message == null) {
@@ -118,8 +125,8 @@ public class TicketManagerPlugin extends JavaPlugin {
 
     public void reloadPluginConfig() {
         reloadConfig();
-        loadMessagesConfig(); // Reload messages.yml
-        ticketManager.loadTickets(); // Reload tickets if necessary
+        loadMessagesConfig();
+        ticketManager.loadTickets();
     }
 
     public void logAction(String action) {

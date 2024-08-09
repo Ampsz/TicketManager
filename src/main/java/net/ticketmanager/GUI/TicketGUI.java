@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -38,7 +39,6 @@ public class TicketGUI implements Listener {
                 skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(ticket.getCreator()));
                 skullMeta.setDisplayName(ChatColor.YELLOW + "Ticket #" + ticket.getId());
 
-                // Reuse the formatting logic from /ticket list
                 List<String> lore = formatTicketDetails(ticket);
                 skullMeta.setLore(lore);
                 skullItem.setItemMeta(skullMeta);
@@ -50,11 +50,11 @@ public class TicketGUI implements Listener {
         staffMember.openInventory(inventory);
     }
 
-    // Handle inventory click events
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getView().getTitle().equals(ChatColor.DARK_PURPLE + "Ticket Management")) {
-            event.setCancelled(true);
+        // Check if the clicked inventory is the Ticket Management GUI
+        if (event.getView().getTitle().equals(ChatColor.GRAY + "Ticket Management")) {
+            event.setCancelled(true);  // Prevent any item movement
 
             Player player = (Player) event.getWhoClicked();
             ItemStack clickedItem = event.getCurrentItem();
@@ -64,7 +64,25 @@ public class TicketGUI implements Listener {
                 if (skullMeta != null) {
                     String ticketId = ChatColor.stripColor(skullMeta.getDisplayName()).replace("Ticket #", "");
                     player.sendMessage(ChatColor.GREEN + "You clicked on Ticket #" + ticketId);
-                    // Add more actions here as needed
+                }
+            }
+        }
+    }
+
+    // Prevent dragging items in the GUI
+    @EventHandler
+    public void onInventoryDrag(InventoryDragEvent event) {
+        if (event.getView().getTitle().equals(ChatColor.GRAY + "Ticket Management")) {
+            event.setCancelled(true);
+        }
+    }
+
+    public void updateTicketGUIForAllStaff() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.hasPermission("ticketmanager.staff")) {
+                if (player.getOpenInventory().getTitle().equals(ChatColor.GRAY + "Ticket Management")) {
+                    List<Ticket> tickets = plugin.getTicketManager().getTickets();
+                    openTicketGUI(player, tickets);
                 }
             }
         }
@@ -76,7 +94,6 @@ public class TicketGUI implements Listener {
         details.add(ChatColor.GREEN + "Date: " + ChatColor.YELLOW + ticket.getSubmissionDate().toString());
         details.add(ChatColor.GREEN + "Status: " + ChatColor.YELLOW + ticket.getStatus());
         details.add(ChatColor.GREEN + "Message: " + ChatColor.YELLOW + ticket.getMessage());
-
         return details;
     }
 }
