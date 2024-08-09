@@ -114,8 +114,7 @@ public class TicketManager {
         }
         sender.sendMessage(plugin.getMessage("list_tickets_header"));
         for (Ticket ticket : tickets) {
-            if (!ticket.getStatus().equalsIgnoreCase("Closed")) {
-                // Format the location with rounded coordinates
+            if (!ticket.getStatus().equalsIgnoreCase("Closed")) {  // Exclude closed tickets
                 String location = String.format("world %.0f %.0f %.0f",
                         (double) Math.round(ticket.getLocation().getX()),
                         (double) Math.round(ticket.getLocation().getY()),
@@ -123,18 +122,18 @@ public class TicketManager {
 
                 String header = plugin.getMessage("ticket_layout.header");
                 String creator = plugin.getMessage("ticket_layout.creator")
+                        .replace("{id}", String.valueOf(ticket.getId()))
                         .replace("{creator}", ticket.getCreator());
                 String assignedTo = plugin.getMessage("ticket_layout.assigned_to")
                         .replace("{assignee}", ticket.getAssignee().equals("None") ? "None" : ticket.getAssignee());
                 String priority = plugin.getMessage("ticket_layout.priority")
                         .replace("{priority}", "NORMAL");
                 String status = plugin.getMessage("ticket_layout.status")
-                        .replace("{status}", ticket.getStatus());
+                        .replace("{status}", ticket.getStatus())
+                        .replace("{message}", ticket.getMessage());
                 String loc = plugin.getMessage("ticket_layout.location")
                         .replace("{location}", location);
-                String footer = plugin.getMessage("ticket_layout.footer")
-                        .replace("{id}", String.valueOf(ticket.getId()))
-                        .replace("{message}", ticket.getMessage());
+                String footer = plugin.getMessage("ticket_layout.footer");
 
                 sender.sendMessage(header);
                 sender.sendMessage(creator + "  " + assignedTo);
@@ -144,6 +143,7 @@ public class TicketManager {
             }
         }
     }
+
 
 
     public boolean assignTicket(int id, String assignee) {
@@ -162,29 +162,36 @@ public class TicketManager {
 
     public boolean closeTicket(int id) {
         Ticket ticket = getTicketById(id);
-        if (ticket != null) {
-            ticket.setStatus("Closed");
 
-            // Notify the command sender
+        if (ticket == null) {
+            // Ticket doesn't exist, notify the user
             CommandSender commandSender = Bukkit.getConsoleSender(); // Replace with actual sender if available
-            commandSender.sendMessage(plugin.getMessage("ticket_closed").replace("{id}", String.valueOf(ticket.getId())));
-
-            // Notify the creator of the ticket
-            Player creator = Bukkit.getPlayer(ticket.getCreator());
-            if (creator != null) {
-                creator.sendMessage(plugin.getMessage("ticket_closed_creator").replace("{id}", String.valueOf(ticket.getId())));
-            }
-
-            if (useDatabase) {
-                updateTicketInDatabase(ticket);
-            } else {
-                saveTicketToLocalStorage(ticket);
-            }
-            return true;
+            commandSender.sendMessage(plugin.getMessage("ticket_not_found").replace("{id}", String.valueOf(id)));
+            return false;
         }
-        return false;
-    }
 
+        // If the ticket exists, proceed to close it
+        ticket.setStatus("Closed");
+
+        // Update the ticket in the database
+        if (useDatabase) {
+            updateTicketInDatabase(ticket);
+        } else {
+            saveTicketToLocalStorage(ticket);
+        }
+
+        // Notify the command sender
+        CommandSender commandSender = Bukkit.getConsoleSender(); // Replace with actual sender if available
+        commandSender.sendMessage(plugin.getMessage("ticket_closed").replace("{id}", String.valueOf(ticket.getId())));
+
+        // Notify the creator of the ticket
+        Player creator = Bukkit.getPlayer(ticket.getCreator());
+        if (creator != null) {
+            creator.sendMessage(plugin.getMessage("ticket_closed_creator").replace("{id}", String.valueOf(ticket.getId())));
+        }
+
+        return true;
+    }
 
 
     private void updateTicketInDatabase(Ticket ticket) {
@@ -204,7 +211,7 @@ public class TicketManager {
                 statement.setInt(9, ticket.getId());
                 statement.executeUpdate();
 
-                Bukkit.getLogger().info("TicketManager - Ticket ID " + ticket.getId() + " updated in database");
+                Bukkit.getLogger().info("TicketManager - Ticket ID " + ticket.getId() + " updated in database with status " + ticket.getStatus());
             }
         } catch (SQLException e) {
             e.printStackTrace();

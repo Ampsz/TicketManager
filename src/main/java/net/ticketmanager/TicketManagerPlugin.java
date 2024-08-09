@@ -1,6 +1,7 @@
 package net.ticketmanager;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,12 +38,13 @@ public class TicketManagerPlugin extends JavaPlugin {
 
         // Register the /ticket command
         this.getCommand("ticket").setExecutor(new TicketCommand(this));
+
     }
 
     private void loadMessagesConfig() {
         messagesFile = new File(getDataFolder(), "messages.yml");
         if (!messagesFile.exists()) {
-            saveResource("messages.yml", false); // Creates messages.yml from plugin's resources folder
+            saveResource("messages.yml", false); // Creates messages.yml from the plugin's resources folder
         }
         messagesConfig = YamlConfiguration.loadConfiguration(messagesFile);
     }
@@ -88,7 +90,12 @@ public class TicketManagerPlugin extends JavaPlugin {
     }
 
     public String getMessage(String key) {
-        return ChatColor.translateAlternateColorCodes('&', messagesConfig.getString(key, "&cMessage not found: " + key));
+        String message = messagesConfig.getString(key);
+        if (message == null) {
+            Bukkit.getLogger().severe("Message not found for key: " + key);
+            return ChatColor.translateAlternateColorCodes('&', "&cMessage not found: " + key);
+        }
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 
     public void reloadPluginConfig() {

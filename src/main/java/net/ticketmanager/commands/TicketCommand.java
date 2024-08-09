@@ -33,6 +33,7 @@ public class TicketCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("reload")) {
             if (sender.hasPermission("ticketmanager.reload")) {
                 plugin.reloadPluginConfig();
+                // Send the reload success message
                 sender.sendMessage(plugin.getMessage("reload_success"));
             } else {
                 sender.sendMessage(plugin.getMessage("no_permission"));

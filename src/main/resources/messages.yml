@@ -11,12 +11,12 @@ list_tickets_header: "&aListing all tickets:"
 # Ticket Layout
 ticket_layout:
   header: "&b============== Info =============="
-  creator: "&bCreator: &f{creator}"
+  creator: "&bTicket ID: {id} | Creator: &f{creator}"
   assigned_to: "&bAssigned To: &f{assignee}"
   priority: "&bPriority: &e{priority}"
-  status: "&bStatus: &a{status}"
+  status: "&bStatus: &a{status} | &bMessage: &f{message}"
   location: "&bLocation: &f{location}"
-  footer: "&b============= Actions ============="
+  footer: "&b==================================="
 
   reload_success: "&aTicketManager configuration reloaded successfully!"
   no_permission: "&cYou do not have permission to use this command."
