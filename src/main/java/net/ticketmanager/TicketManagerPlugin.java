@@ -49,18 +49,23 @@ public class TicketManagerPlugin extends JavaPlugin {
 
     private void setupDatabase() {
         FileConfiguration config = getConfig();
-        mySQL = new MySQL();  // No arguments needed
+
+        // Initialize MySQL with connection details
+        mySQL = new MySQL(
+                config.getString("database.host"),
+                config.getInt("database.port"),
+                config.getString("database.name"),
+                config.getString("database.user"),
+                config.getString("database.password")
+        );
+
         try {
-            mySQL.connect(
-                    config.getString("database.host"),
-                    config.getInt("database.port"),
-                    config.getString("database.name"),
-                    config.getString("database.user"),
-                    config.getString("database.password")
-            );
+            // Connect to the database
+            mySQL.connect();
             getLogger().info("Successfully connected to the database.");
-        } catch (Exception e) {
-            getLogger().severe("Failed to connect to the database. Falling back to local storage.");
+        } catch (SQLException e) {
+            getLogger().severe("Failed to connect to the database: " + e.getMessage());
+            e.printStackTrace();
             getConfig().set("settings.use_database", false);
         }
     }

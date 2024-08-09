@@ -6,19 +6,30 @@ description: Coming Soon
 api-version: '1.21'
 commands:
   ticket:
-    description: Main ticket command for creating and managing tickets.
-    usage: /ticket <create|list|assign|close> [args]
-    permission: ticket.use
-    permission-message: You do not have permission to use this command.
-  ticketmanager:
-    description: Admin command to reload the TicketManager plugin.
-    usage: /ticketmanager <reload>
-    permission: ticketmanager.admin
-    permission-message: You do not have permission to use this command.
+    description: Main command for ticket management.
+    usage: /ticket <create|list|assign|close|reload|help>
+    aliases: [tickets]
+    permission: ticketmanager.use
+    permission-message: "&cYou do not have permission to use this command."
 permissions:
-  ticket.use:
-    description: Allows a player to create and view their own tickets.
+  ticketmanager.use:
+    description: Allows the player to use the /ticket command.
     default: true
-  ticketmanager.admin:
-    description: Allows staff to manage tickets and reload the plugin.
+  ticketmanager.create:
+    description: Allows the player to create a ticket.
+    default: true
+  ticketmanager.list:
+    description: Allows the player to list tickets.
+    default: op
+  ticketmanager.assign:
+    description: Allows the player to assign tickets.
+    default: op
+  ticketmanager.close:
+    description: Allows the player to close tickets.
+    default: op
+  ticketmanager.reload:
+    description: Allows the player to reload the TicketManager configuration.
+    default: op
+  ticketmanager.notify:
+    description: Notifies the player of new tickets and unresolved tickets on join.
     default: op

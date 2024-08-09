@@ -132,7 +132,9 @@ public class TicketManager {
                         .replace("{status}", ticket.getStatus());
                 String loc = plugin.getMessage("ticket_layout.location")
                         .replace("{location}", location);
-                String footer = plugin.getMessage("ticket_layout.footer");
+                String footer = plugin.getMessage("ticket_layout.footer")
+                        .replace("{id}", String.valueOf(ticket.getId()))
+                        .replace("{message}", ticket.getMessage());
 
                 sender.sendMessage(header);
                 sender.sendMessage(creator + "  " + assignedTo);
@@ -142,6 +144,7 @@ public class TicketManager {
             }
         }
     }
+
 
     public boolean assignTicket(int id, String assignee) {
         Ticket ticket = getTicketById(id);
@@ -186,17 +189,10 @@ public class TicketManager {
 
     private void updateTicketInDatabase(Ticket ticket) {
         try {
-            if (mySQL.getConnection().isClosed()) {
-                mySQL.connect(plugin.getConfig().getString("database.host"),
-                        plugin.getConfig().getInt("database.port"),
-                        plugin.getConfig().getString("database.name"),
-                        plugin.getConfig().getString("database.user"),
-                        plugin.getConfig().getString("database.password"));
-            }
+            Connection connection = mySQL.getConnection();
 
-            try (Connection connection = mySQL.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(
-                         "UPDATE tickets SET assignee = ?, status = ?, world = ?, x = ?, y = ?, z = ?, yaw = ?, pitch = ? WHERE id = ?")) {
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE tickets SET assignee = ?, status = ?, world = ?, x = ?, y = ?, z = ?, yaw = ?, pitch = ? WHERE id = ?")) {
                 statement.setString(1, ticket.getAssignee());
                 statement.setString(2, ticket.getStatus());
                 statement.setString(3, ticket.getLocation().getWorld().getName());
@@ -207,13 +203,15 @@ public class TicketManager {
                 statement.setFloat(8, ticket.getLocation().getPitch());
                 statement.setInt(9, ticket.getId());
                 statement.executeUpdate();
-                Bukkit.getLogger().info("TicketManager - Ticket updated in database");
+
+                Bukkit.getLogger().info("TicketManager - Ticket ID " + ticket.getId() + " updated in database");
             }
         } catch (SQLException e) {
             e.printStackTrace();
             Bukkit.getLogger().severe("TicketManager - Failed to update ticket in the database: " + e.getMessage());
         }
     }
+
 
 
     private Ticket getTicketById(int id) {
